@@ -13,6 +13,9 @@ export const Routes = () => {
         <Route path="/login">
           <LogInPage />
         </Route>
+        <Route path="/signup">
+          <SignUpPage />
+        </Route>
       </Switch>
     </Router>
   );
