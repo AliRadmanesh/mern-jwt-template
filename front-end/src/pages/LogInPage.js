@@ -1,17 +1,28 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
+
+import { useToken } from "../auth/useToken";
 
 export const LogInPage = () => {
+  const [token, setToken] = useToken();
+
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
 
   const history = useHistory();
 
   const handleEmailChange = (event) => setEmail(event.target.value);
   const handlePasswordChange = (event) => setPassword(event.target.value);
 
-  const onLogInClicked = async () => alert("Log in not implemented yet!");
+  const onLogInClicked = async () => {
+    const response = await axios.post("/api/login", { email, password });
+    const { token } = response.data;
+    setToken(token);
+    history.push("/");
+  };
 
   const onForgotPasswordClicked = () => history.push("/forgot-password");
 
