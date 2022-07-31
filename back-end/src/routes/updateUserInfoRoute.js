@@ -10,12 +10,11 @@ export const updateUserInfoRoute = {
     const { authorization } = req.headers;
     const { userId } = req.params;
 
-    const updates = ({ favoriteFood, hairColor, bio }) =>
-      ({
-        favoriteFood,
-        hairColor,
-        bio,
-      }(req.body));
+    const updates = (({ favoriteFood, hairColor, bio }) => ({
+      favoriteFood,
+      hairColor,
+      bio,
+    }))(req.body);
 
     if (!authorization) {
       return res.status(401).json({ message: "No authorization header sent" });
