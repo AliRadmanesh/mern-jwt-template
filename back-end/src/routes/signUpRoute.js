@@ -1,7 +1,9 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { v4 as uuid } from "uuid";
 
 import { getDbConnection } from "../db";
+import { sendEmail } from "../util/sendEmail";
 
 export const signUpRoute = {
   path: "/api/signup",
@@ -16,6 +18,8 @@ export const signUpRoute = {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
+    const verificationString = uuid();
+
     const startingInfo = {
       hairColor: "",
       favoriteFood: "",
@@ -27,8 +31,24 @@ export const signUpRoute = {
       passwordHash,
       info: startingInfo,
       isVerified: false,
+      verificationString,
     });
     const { insertedId } = result;
+
+    try {
+      await sendEmail({
+        from: "ali.radmanesh1995@gmail.com",
+        to: email,
+        subject: "Please verify your email",
+        text: `
+          Thanks for signing up! To verify your email, click here:
+          http://localhost:3000/verify-email/${verificationString}
+        `,
+      });
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
 
     jwt.sign(
       {
