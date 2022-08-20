@@ -16,7 +16,7 @@ export const EmailVerificationLandingPage = () => {
   useEffect(() => {
     const loadVerification = async () => {
       try {
-        const response = await axios.post("/api/verify-email", {
+        const response = await axios.put("/api/verify-email", {
           verificationString,
         });
         const { token } = response.data;
